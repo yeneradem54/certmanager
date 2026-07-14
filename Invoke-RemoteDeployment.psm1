@@ -68,9 +68,8 @@ function Invoke-RemoteIISDeployment {
             # Fonksiyonları çağır
             $cert = Install-CertificateToStore -PfxFilePath $pfxPath -PfxPassword $pfxPass -StoreName "WebHosting" -StoreLocation "LocalMachine"
             
-            $sniSwitch = if ($reqSNI) { "-RequireSNI" } else { "" }
-            
-            Set-IISCertificateBinding -SiteName $siteName -Thumbprint $cert.Thumbprint -HostHeader $hostHdr @(if($reqSNI){"-RequireSNI"})
+            # SNI parametresini Boolean olarak güvenli şekilde geçiyoruz (-Switch:$bool)
+            Set-IISCertificateBinding -SiteName $siteName -Thumbprint $cert.Thumbprint -HostHeader $hostHdr -RequireSNI:$reqSNI
             
             # Geçici dosyayı sil
             Remove-Item -Path $pfxPath -Force -ErrorAction SilentlyContinue

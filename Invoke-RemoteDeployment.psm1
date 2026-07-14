@@ -62,8 +62,8 @@ function Invoke-RemoteIISDeployment {
         $scriptBlock = {
             param ($pfxPath, $pfxPass, $siteName, $hostHdr, $reqSNI, $modScript)
             
-            # Uzak sunucuda modülü memory'de tanımla
-            Invoke-Command -ScriptBlock ([scriptblock]::Create($modScript))
+            # Uzak sunucuda modülü memory'de tanımla (Dot-Sourcing kullanarak mevcut scope'a ekliyoruz)
+            . ([scriptblock]::Create($modScript))
             
             # Fonksiyonları çağır
             $cert = Install-CertificateToStore -PfxFilePath $pfxPath -PfxPassword $pfxPass -StoreName "WebHosting" -StoreLocation "LocalMachine"
